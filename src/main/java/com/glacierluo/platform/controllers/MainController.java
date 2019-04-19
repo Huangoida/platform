@@ -12,12 +12,9 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.glacierluo.platform.entity.User;
 import com.glacierluo.platform.repository.UserRepository;
-import org.apache.commons.collections4.IteratorUtils;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.VfsUtils;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.glacierluo.platform.classes.Json;
 
@@ -31,9 +28,9 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.apache.tomcat.util.file.ConfigFileLoader.getInputStream;
 
-@Controller
+//@RestController是@ResponseBody和@Controller的组合注解。
+@RestController
 @RequestMapping(path="/")
 public class MainController {
     @Autowired
@@ -41,7 +38,7 @@ public class MainController {
 
 
     @PostMapping("/register")
-    public @ResponseBody Json register (@RequestBody User user){
+    public Json register (@RequestBody User user){
         if(user.checkNull()){
             userRepository.save(user);
             return new Json("Register success!", 200);
@@ -51,7 +48,7 @@ public class MainController {
     }
 
     @PostMapping("/updateProfile")  //TODO:注册与更新信息接口的修改
-    public @ResponseBody Json updateProfile (@RequestBody User user){
+    public Json updateProfile (@RequestBody User user){
         if(user.checkNull()){
             User updated = userRepository.findById(user.getId()).orElse(null);
             if(updated == null){
@@ -106,7 +103,7 @@ public class MainController {
 
 
     @PostMapping("/usersSheetImport")
-    public @ResponseBody Json userSheetExport(HttpServletRequest request) throws Exception {
+    public Json userSheetExport(HttpServletRequest request) throws Exception {
         int len = request.getContentLength();
 //        System.out.println(request.getContentType());
         ServletInputStream inputStream = null;
@@ -198,19 +195,19 @@ public class MainController {
 //    }
 
     @GetMapping("/userInfo/userID/{userID}")
-    public @ResponseBody
+    public
     Optional<User> userInfo(@PathVariable Long userID){
         return userRepository.findById(userID);
     }
 
     @GetMapping("/userInfo/userName/{userName}")
-    public @ResponseBody User userInfo(@PathVariable String userName){
+    public User userInfo(@PathVariable String userName){
         return userRepository.findByName(userName);
     }
 
 
     @GetMapping("/allUser")
-    public @ResponseBody Iterable<User> getAllUsers(){
+    public Iterable<User> getAllUsers(){
         return userRepository.findAll();
     }
 }

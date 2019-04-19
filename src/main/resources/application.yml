@@ -6,6 +6,9 @@ spring:
 #开发环境配置
 spring:
   profiles: dev
+  devtools:
+    restart:
+      additional-paths: src/main/java
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/platform?serverTimezone=UTC
