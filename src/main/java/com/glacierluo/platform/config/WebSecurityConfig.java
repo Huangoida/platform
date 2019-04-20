@@ -1,8 +1,11 @@
 package com.glacierluo.platform.config;
 
+import com.glacierluo.platform.service.UserRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -14,24 +17,22 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    //自定义UserDetailsService注入
+    @Autowired
+    private UserRoleService userRoleService;
+
+    @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception{
         return super.authenticationManagerBean();
     }
-
+    //匹配用户时密码规则
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService(){
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user_1").password(new BCryptPasswordEncoder().encode("123456")).authorities("USER").build());
-        manager.createUser(User.withUsername("user_2").password(new BCryptPasswordEncoder().encode("123456")).authorities("USER").build());
-        return manager;
-    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
@@ -41,4 +42,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/oauth/*").permitAll();
     }
+
+    //配置全局方法拦截
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //auth使用UserRoleService来获取用户信息
+        auth.userDetailsService(userRoleService);
+    }
+
+
 }
