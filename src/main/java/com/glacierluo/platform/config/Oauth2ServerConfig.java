@@ -1,18 +1,13 @@
 package com.glacierluo.platform.config;
 
+import com.glacierluo.platform.service.ClientDetailService;
 import com.glacierluo.platform.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.*;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
@@ -78,20 +73,24 @@ public class Oauth2ServerConfig {
         @Autowired
         private UserRoleService userRoleService;
 
+        @Autowired
+        private ClientDetailService clientDetailService;
+
         @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-            clients.inMemory().withClient("client_1")
-                    .resourceIds(resource_id)
-                    .authorizedGrantTypes("client_credentials", "refresh_token")
-                    .scopes("select")
-                    .authorities("client")
-                    .secret(new BCryptPasswordEncoder().encode("123456"))
-                    .and().withClient("client_2")
-                    .resourceIds(resource_id)
-                    .authorizedGrantTypes("password", "refresh_token")
-                    .scopes("select")
-                    .authorities("client")
-                    .secret(new BCryptPasswordEncoder().encode("123456"));
+//            clients.inMemory().withClient("client_1")
+//                    .resourceIds(resource_id)
+//                    .authorizedGrantTypes("client_credentials", "refresh_token")
+//                    .scopes("select")
+//                    .authorities("client")
+//                    .secret(new BCryptPasswordEncoder().encode("123456"))
+//                    .and().withClient("client_2")
+//                    .resourceIds(resource_id)
+//                    .authorizedGrantTypes("password", "refresh_token")
+//                    .scopes("select")
+//                    .authorities("client")
+//                    .secret(new BCryptPasswordEncoder().encode("123456"));
+            clients.withClientDetails(clientDetailService);
         }
 
         @Override
@@ -103,7 +102,9 @@ public class Oauth2ServerConfig {
         @Override
         public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception{
             //允许表单登录
-            oauthServer.allowFormAuthenticationForClients();
+            oauthServer.tokenKeyAccess("permitAll()")
+                    .checkTokenAccess("permitAll()")
+                    .allowFormAuthenticationForClients();
         }
     }
 }

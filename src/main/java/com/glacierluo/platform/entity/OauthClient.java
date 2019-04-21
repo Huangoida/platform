@@ -9,12 +9,17 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Role {
+public class OauthClient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //身份名
-    private String name;
+    private String clientName;
+    private String clientPassword;
+    private String resourceIds;
+    private String scopes;
+    private String grantTypes;
+    private String authorities;
+
 
 }
