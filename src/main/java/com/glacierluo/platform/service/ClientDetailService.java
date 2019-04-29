@@ -19,8 +19,8 @@ public class ClientDetailService implements ClientDetailsService {
     public ClientDetails loadClientByClientId(String s) throws ClientRegistrationException {
 
         OauthClient oauthClient=oauthClientRepostiory.findByclientName(s);
-        BaseClientDetails baseClientDetails= new BaseClientDetails(oauthClient.getClientName(),oauthClient.getResourceIds(),oauthClient.getScopes(),oauthClient.getGrantTypes(),oauthClient.getAuthorities());
-        baseClientDetails.setClientSecret(oauthClient.getClientPassword());
+        BaseClientDetails baseClientDetails= new BaseClientDetails(oauthClient.getClientName(),oauthClient.getResourceIds(),oauthClient.getScopes(),oauthClient.getGrantTypes(),oauthClient.getAuthorities(),oauthClient.getRedirectUri());
+        baseClientDetails.setClientSecret(oauthClient.getClientKey());
         return baseClientDetails;
     }
 }
