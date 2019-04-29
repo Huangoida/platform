@@ -4,6 +4,7 @@ import com.glacierluo.platform.service.ClientDetailService;
 import com.glacierluo.platform.service.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,7 @@ public class Oauth2ServerConfig {
     /**
      * 资源服务器
      */
+    @Order(6)
     @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
@@ -96,14 +98,15 @@ public class Oauth2ServerConfig {
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception{
             endpoints.tokenStore(new RedisTokenStore(redisConnectionFactory))
-                    .authenticationManager(authenticationManager);
+                    .authenticationManager(authenticationManager)
+                    .userDetailsService(userRoleService);
         }
 
         @Override
         public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception{
             //允许表单登录
             oauthServer.tokenKeyAccess("permitAll()")
-                    .checkTokenAccess("permitAll()")
+                    .checkTokenAccess("isAuthenticated()")
                     .allowFormAuthenticationForClients();
         }
     }
