@@ -9,11 +9,24 @@ spring:
   devtools:
     restart:
       additional-paths: src/main/java
+  thymeleaf:
+    suffix: .html
+    cache: false
+    servlet:
+      content-type: text/html
+    encoding: UTF-8
+    mode: HTML5
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/platform?serverTimezone=UTC
     username: root
-    password: root
+    password: wangjile
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+
   jpa:
     hibernate:
       ddl-auto: update

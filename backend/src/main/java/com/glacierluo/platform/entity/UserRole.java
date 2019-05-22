@@ -27,4 +27,18 @@ public class UserRole {
     //密码
     private String  password;
 
+    public UserRole(UserRole userRole) {
+        this.userId = userRole.userId;
+        this.roleId = userRole.roleId;
+        this.password = userRole.password;
+    }
+    public UserRole(){
+
+    }
+
+    public UserRole(Long userId, Long roleId, String password) {
+        this.userId = userId;
+        this.roleId = roleId;
+        this.password = password;
+    }
 }

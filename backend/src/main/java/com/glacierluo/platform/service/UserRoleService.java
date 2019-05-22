@@ -33,7 +33,13 @@ public class UserRoleService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        UserRole userRole=userRoleRepository.findByuserId(Long.parseLong(username));
+        UserRole userRole;
+        try{
+            userRole=userRoleRepository.findByuserId(Long.parseLong(username));
+        }catch (Exception e){
+            throw new UsernameNotFoundException("username not found");
+        }
+
         if (userRole == null){
             //没有找到用户
             throw  new UsernameNotFoundException(username + "not found");

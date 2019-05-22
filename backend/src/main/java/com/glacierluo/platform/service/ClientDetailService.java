@@ -17,9 +17,16 @@ public class ClientDetailService implements ClientDetailsService {
 
     @Override
     public ClientDetails loadClientByClientId(String s) throws ClientRegistrationException {
-
-        OauthClient oauthClient=oauthClientRepostiory.findByclientName(s);
-        BaseClientDetails baseClientDetails= new BaseClientDetails(oauthClient.getClientName(),oauthClient.getResourceIds(),oauthClient.getScopes(),oauthClient.getGrantTypes(),oauthClient.getAuthorities(),oauthClient.getRedirectUri());
+        OauthClient oauthClient;
+        try{
+           oauthClient=oauthClientRepostiory.findByclientId(s);
+        }catch (Exception e){
+            throw new ClientRegistrationException("没有找到client");
+        }
+       if (oauthClient == null){
+           throw new ClientRegistrationException("clientId无效");
+       }
+        BaseClientDetails baseClientDetails= new BaseClientDetails(oauthClient.getClientId(),oauthClient.getResourceIds(),oauthClient.getScopes(),oauthClient.getGrantTypes(),oauthClient.getAuthorities(),oauthClient.getRedirectUri());
         baseClientDetails.setClientSecret(oauthClient.getClientKey());
         return baseClientDetails;
     }

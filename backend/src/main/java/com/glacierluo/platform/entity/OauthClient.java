@@ -15,12 +15,19 @@ public class OauthClient {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String clientName;
+    //Client的id
+    private String clientId;
+    //Client的密码
     private String clientKey;
+    //
     private String resourceIds;
+    //可授权的访问
     private String scopes;
+    //授权方式，统一用授权码方式
     private String grantTypes;
+
     private String authorities;
+    //授权
     private String redirectUri;
 
 
