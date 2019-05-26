@@ -1,7 +1,15 @@
 package com.glacierluo.platform.controllers;
 
+import com.glacierluo.platform.classes.Json;
+import com.glacierluo.platform.entity.User;
+import com.glacierluo.platform.entity.UserRole;
 import com.glacierluo.platform.repository.UserRepository;
+import com.glacierluo.platform.repository.UserRoleRepository;
+import com.glacierluo.platform.vo.ChangeUserPassword;
+import io.swagger.annotations.ApiOperation;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -11,17 +19,17 @@ import javax.servlet.http.HttpServletResponse;
 
 
 //@RestController是@ResponseBody和@Controller的组合注解。
-@Controller
+@RestController
 public class MainController {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private UserRoleRepository userRoleRepository;
     @GetMapping("/auth/login")
     public String loginPage(ModelMap model){
         model.addAttribute("loginProcessUrl","/auth/authorize");
         return "base-login";
     }
-
 
 
 
